@@ -15,10 +15,12 @@ class Main:
 		self.Commands = []#strings of the accepted commands, to be filled later in execution
 		
 		self.Mode = 0
-		self.Politics = 250# <100 = anarchy and >=400 = democracy
+		self.Politics = 350# <100 = anarchy and >=400 = democracy
+		#self.Politics = 250# <100 = anarchy and >=400 = democracy
 		
-		self.dBuffer = {}#democrachy
 		self.inputs = []#the stdout of commands
+		self.dBuffer = {}#democrachy
+		self.command = None
 		
 		reactor.callLater(1.0, self.Step)
 	def MSGRecieved(self, username, msg):
@@ -30,7 +32,7 @@ class Main:
 			if self.Mode == 0:#anarchy
 				Game.Command(msg)
 			else:
-				dBuffer[msg] = dBuffer.get(msg, default=0) + 1
+				self.dBuffer[msg] = self.dBuffer.get(msg, 0) + 1
 		elif msg == "anarchy":
 			self.inputs.append((username, msg))
 			if self.Politics > 0: self.Politics -= 1
@@ -43,11 +45,20 @@ class Main:
 			if self.Politics >= 400 and self.Mode == 0:
 				print "Changed to Democracy!"
 				self.Mode = 1
+				self.command = None
 	def Step(self):#do stuff in democracy
-		reactor.callLater(1.0, self.Step)
+		reactor.callLater(3.0, self.Step)
 	
 		#clean
 		self.inputs = self.inputs[-30:]
+		
+		#democracy
+		if self.Mode:
+			self.command = max(self.dBuffer.keys(), key=self.dBuffer.get) if self.dBuffer.keys() else None
+			self.dBuffer.clear()
+			
+			if self.command:
+				Game.Command(self.command)
 		
 Main = Main()
 

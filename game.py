@@ -18,11 +18,11 @@ class Game:
 					self.commands[key] = data
 		f.close()
 		
-		os.system("start vba/VisualBoyAdvance.exe vba/game.gba")
+		#os.system("start vba/VisualBoyAdvanceM.exe vba/game.gba")
 		self.activate()
 	def activate(self):
 		reactor.callLater(5.0, self.activate)
 		self.wsh.AppActivate("VisualBoyAdvance")
 	def Command(self, cmd):
-		#self.wsh.SendKeys(self.commands[cmd])
+		self.wsh.SendKeys(self.commands[cmd])
 		pass
