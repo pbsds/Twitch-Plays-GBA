@@ -17,6 +17,7 @@ anarchyBG = pygame.image.load("graphics/anarchy.png").convert()
 democracyBG = pygame.image.load("graphics/anarchy.png").convert()
 Commands = {}#loaded by Setup()
 
+prev = None#to see if a screen update is required
 
 #make colors load from config file!
 class Text():
@@ -40,7 +41,7 @@ class Text():
 Text = Text()
 
 def MainLoop():#like the mainloop, but an event triggered by twisted instead
-	global Main, anarchyBG, democracyBG, Commands
+	global Main, anarchyBG, democracyBG, Commands, prev
 	
 	#Framerate
 	#maybe not fixed?
@@ -54,7 +55,9 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 			reactor.stop()
 	
 	#figure wether to update the frame or not:
-	if 1 == 1:#huehuehue
+	if Main.inputs <> prev:
+		prev = Main.inputs
+		
 		Window.blit(democracyBG if Main.Mode else anarchyBG, (0, 0))
 		
 		#blit time
@@ -76,7 +79,7 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 
 def Setup(main):
 	global Main, Commands
-	reactor.callLater(1, MainLoop)
+	reactor.callLater(1.0/30.0, MainLoop)
 	Main = main
 	for i in Main.Commands:
 		Commands[i] = pygame.image.load("graphics/cmd/%s.png" % i).convert_alpha()
