@@ -5,11 +5,11 @@ import twitch, game, display
 
 username = "pbsds"
 Oauth = "oauth:123456789"#can be generated at http://twitchapps.com/tmi/
-channel = "twitchplayspokemon"
-#channel = username
+#channel = "twitchplayspokemon"
+channel = username
 
-#host = "irc.twitch.tv"
-host = "199.9.252.26"
+host = "irc.twitch.tv"
+#host = "199.9.252.26"
 port = 6667
 
 class Main:
