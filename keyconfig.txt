@@ -1,0 +1,10 @@
+up=w
+down=s
+left=a
+right=d
+a=z
+b=x
+l=c
+r=v
+start=q
+select=e
