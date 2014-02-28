@@ -11,7 +11,7 @@ pygame.init()
 pygame.font.init()
 pygame.display.set_caption("Twitch plays GBA")
 #Output = pygame.display.set_mode((427,240))
-Window = pygame.display.set_mode((854,480))
+Window = pygame.display.set_mode((1280,720))
 Output = pygame.Surface((427, 240)).convert()
 
 anarchyBG = pygame.image.load("graphics/anarchy.png").convert()
@@ -93,7 +93,7 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 		Output.blit(pIndicator, (297 + Main.Politics * 73 / 500, 41))
 		
 		#update screen:
-		pygame.transform.scale(Output, (854,480), Window)
+		pygame.transform.scale(Output, (1280, 720), Window)
 		pygame.display.flip()
 
 def Setup(main):

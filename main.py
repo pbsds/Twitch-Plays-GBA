@@ -1,13 +1,15 @@
 from twisted.internet import reactor
 import twitch, game, display
 
+#todo: make these values be read from config file
+
 username = "pbsds"
-Oauth = "oauth:d3qyvzeesizeomoe6kuscz6gyzyhsdq"#can be generated at http://twitchapps.com/tmi/
+Oauth = "oauth:123456789"#can be generated at http://twitchapps.com/tmi/
 channel = "twitchplayspokemon"
 #channel = username
 
-host = "199.9.252.26"
 #host = "irc.twitch.tv"
+host = "199.9.252.26"
 port = 6667
 
 class Main:

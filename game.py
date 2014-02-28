@@ -1,8 +1,9 @@
 import win32com.client as comclt
+import win32api, win32con
 from twisted.internet import reactor
-import os
 
 class Game:
+	
 	def __init__(self, Main):
 		self.Main = Main
 		self.wsh = comclt.Dispatch("WScript.Shell")
@@ -15,14 +16,17 @@ class Game:
 			if i:
 				if "=" in i:
 					key, data = i.split("=")[:2]
-					self.commands[key] = data
+					#self.commands[key] = data
+					self.commands[key] = ord(data.upper())
 		f.close()
-		
-		#os.system("start vba/VisualBoyAdvanceM.exe vba/game.gba")
 		self.activate()
 	def activate(self):
-		reactor.callLater(5.0, self.activate)
 		self.wsh.AppActivate("VisualBoyAdvance")
+		reactor.callLater(5, self.activate)
 	def Command(self, cmd):
-		self.wsh.SendKeys(self.commands[cmd])
-		pass
+		self.wsh.AppActivate("VisualBoyAdvance")
+		win32api.keybd_event(self.commands[cmd], 0, 0, 0)
+		reactor.callLater(0.08, self._release, cmd)
+	def _release(self, cmd):
+		win32api.keybd_event(self.commands[cmd], 0, win32con.KEYEVENTF_KEYUP, 0)
+		
