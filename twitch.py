@@ -44,5 +44,6 @@ class TwitchListenerFactory(protocol.ClientFactory):
 	def clientConnectionFailed(self, connector, reason):
 		print "connection failed:", reason
 
+#sets up the connection to the twisted reactor:
 def Connect(host, port, channel, username, Oauth, SendTo):
 	reactor.connectTCP(host, port, TwitchListenerFactory(channel, username, Oauth, SendTo))

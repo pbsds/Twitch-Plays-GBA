@@ -1,17 +1,15 @@
-import win32com.client as comclt
-import win32api, win32con
+import win32api, win32con, win32com.client
 from twisted.internet import reactor
 
 class Game:
-	
 	def __init__(self, Main):
 		self.Main = Main
-		self.wsh = comclt.Dispatch("WScript.Shell")
+		self.wsh = win32com.client.Dispatch("WScript.Shell")
 		
 		self.commands = {}#self.commands[chat input] = "button to press"
 		
 		#read commands:
-		f = open("keyconfig.txt", "r")
+		f = open("vba/keyconfig.txt", "r")
 		for i in f.read().replace("\r\n", "\n").replace("\r", "\n").split("\n"):
 			if i:
 				if "=" in i:
@@ -19,8 +17,9 @@ class Game:
 					#self.commands[key] = data
 					self.commands[key] = ord(data.upper())
 		f.close()
+		
 		self.activate()
-	def activate(self):
+	def activate(self):#to keep the window focused during inactivity
 		self.wsh.AppActivate("VisualBoyAdvance")
 		reactor.callLater(5, self.activate)
 	def Command(self, cmd):

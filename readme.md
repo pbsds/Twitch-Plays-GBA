@@ -1,10 +1,20 @@
 Twitch Plays GBA - by pbsds
 ======
 
-This requires pywin32, pygame and twisted to work.
+This currently only works on a windows enviroment.
+pywin32, pygame and twisted is needed for this to work to run.
 
-this program is released under the AGLP3 license, found in license.md.
+This program is released under the AGLP3 license, found in license.md.
 An online copy can be found here: http://www.gnu.org/licenses/agpl-3.0.html
 
-You can use a streaming program like FFSPLIT to stream the output of this program, and overlay the gameboy emulator on the designated area.
-I reccomend using "-sws_flags neighbor" as a ffmpeg option
+How to use:
+- Sut up a python 2.7 enviroment and install pywin32, pygame and twisted
+- Download Visual BOy Advance and store it to vba/VisualBoyAdvance.exe
+- Put the game you want to play in vba/game.gba.
+- Edit the visuals in graphics/ and display.py as you may please
+- Set the preferences you need in data.ini
+- run run.bat
+- Set up FFSPLIT or your preffered streaming program, and make VBA overlay Twitch Plays GBA at x36, y=205, w=720, h=480
+- Stream
+
+The font used: http://www.dafont.com/pokemon-ruby-sapphi.font

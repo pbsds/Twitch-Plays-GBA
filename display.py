@@ -1,9 +1,10 @@
-import pygame, sys
+import pygame, sys, time
 from pygame.locals import *#do i need this?
 from twisted.internet import reactor
 
 #set by Setup():
-Main = None#the main class
+Main = None#the class in main.py
+Settings = None#the class in main.py
 
 #GameGlobals:
 print "Initalizing pygame..."
@@ -11,7 +12,7 @@ pygame.init()
 pygame.font.init()
 pygame.display.set_caption("Twitch plays GBA")
 #Output = pygame.display.set_mode((427,240))
-Window = pygame.display.set_mode((1280,720))
+Window = pygame.display.set_mode((427, 240))
 Output = pygame.Surface((427, 240)).convert()
 
 anarchyBG = pygame.image.load("graphics/anarchy.png").convert()
@@ -23,10 +24,10 @@ pCurrent = pygame.image.load("graphics/current.png").convert_alpha()
 
 prev = None#to see if a screen update is required
 
-#make colors load from config file!
 class Text():
 	def __init__(self):
-		self.Font = pygame.font.Font("graphics/font.fon", 12)#make this support other filetypes as well
+		global Settings
+		self.Font = pygame.font.Font(Settings.font, 12)#make this support other filetypes as well
 	def Create(self, String, Color=(255, 255, 255)):
 		return self.Font.render(String, True, Color)
 	def CreateShadowed(self, String, Color1=(16, 24, 32), Color2=(160, 160, 160)):
@@ -42,10 +43,26 @@ class Text():
 		out.blit(self.Font.render(String, True, Color1), (0, 0))
 		
 		return out
-Text = Text()
+
+def MakeTime()
+	t = time.gmtime() - Settings.epoch
+	
+	d = t / (60*60*24)
+	t = t % (60*60*24)
+	
+	h = t / (60*60)
+	t = t % (60*60)
+	
+	m = t / (60)
+	
+	s = t % (60)
+	
+	timestamp = "%id%ih%im%is" % (d, h, m, s)
+	UTC = time.strftime("utc%M:%S")
+	return timestamp, UTC
 
 def MainLoop():#like the mainloop, but an event triggered by twisted instead
-	global Main, Commands, prev
+	global Main, Settings, Commands, prev
 	global anarchyBG, democracyBG, pIndicator, pCurrent
 	
 	#Framerate
@@ -60,46 +77,57 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 			reactor.stop()
 	
 	#figure wether to update the frame or not:
-	if Main.inputs <> prev:
-		prev = Main.inputs[:]
+	timestamp, UTC = MakeTime()
+	if (Main.inputs, Main.command, timestamp) <> prev:
+		prev = (Main.inputs[:], Main.command, timestamp)
 		
-		Output.blit(democracyBG if Main.Mode else anarchyBG, (0, 0))
+		#blit BG:
+		Output.blit(democracyBG if Settings.Mode else anarchyBG, (0, 0))
 		
-		#blit time
+		#blit time:
+		timestamp
+		UTC
 		
-		
-		#blit inputs
-		for i, (user, cmd) in enumerate(Main.inputs[-15 + (7*Main.Mode):][::-1]):
+		#blit inputs:
+		for i, (user, cmd) in enumerate(Main.inputs[-15 + (7*Settings.Mode):][::-1]):
 			Output.blit(Text.Create(user), (262, 223 - 12*i))
 			Output.blit(Commands[cmd], (423-Commands[cmd].get_width(), 226 - 12*i))
 			
-		#blit democracy stuff
-		if Main.dBuffer:
-			for i, (cmd) in enumerate(sorted(Main.dBuffer.keys(), key=Main.dBuffer.get)[:6][::-1]):
-				#Output.blit(Text.Create(cmd), (262, 67 + 12*i))
-				Output.blit(Commands[cmd], (264+8, 70 + 12*i))
+		#blit democracy stuff:
+		if Settings.Mode:
+			if Main.dBuffer:
+				for i, (cmd) in enumerate(sorted(Main.dBuffer.keys(), key=Main.dBuffer.get)[:6][::-1]):
+					#Output.blit(Text.Create(cmd), (262, 67 + 12*i))
+					Output.blit(Commands[cmd], (264+8, 70 + 12*i))
+					
+					count = Text.Create(str(Main.dBuffer[cmd]))
+					Output.blit(count, (423-count.get_width() - 8, 67 + 12*i))
+			if Main.command:
+				w = (674 - Commands[Main.command].get_width()) / 2
 				
-				count = Text.Create(str(Main.dBuffer[cmd]))
-				Output.blit(count, (423-count.get_width() - 8, 67 + 12*i))
-		if Main.command:
-			w = (674 - Commands[Main.command].get_width()) / 2
+				Output.blit(pCurrent, (w, 58))
+				
+				#Output.blit(Text.Create(Main.command), (w+11, 55))
+				Output.blit(Commands[Main.command], (w+13, 58))
 			
-			Output.blit(pCurrent, (w, 58))
-			
-			#Output.blit(Text.Create(Main.command), (w+11, 55))
-			Output.blit(Commands[Main.command], (w+13, 58))
-			
-		#blit politics bar
-		Output.blit(pIndicator, (297 + Main.Politics * 73 / 500, 41))
+		#blit politics bar indicator:
+		Output.blit(pIndicator, (297 + Settings.Politics * 73 / Settings.pScale, 41))
 		
-		#update screen:
+		#update window:
 		pygame.transform.scale(Output, (1280, 720), Window)
 		pygame.display.flip()
 
-def Setup(main):
-	global Main, Commands
-	reactor.callLater(1.0/30.0, MainLoop)
+def Setup(main, settings):
+	global Main, Settings, Commands, Text
 	Main = main
+	Settings = settings
+	Text = Text()
+	
+	Window = pygame.display.set_mode((1280,720))
+	
+	
+	reactor.callLater(1.0/30.0, MainLoop)
+	
 	for i in Main.Commands:
 		Commands[i] = pygame.image.load("graphics/cmd/%s.png" % i).convert_alpha()
 	Commands["anarchy"] = pygame.image.load("graphics/cmd/anarchy.png").convert_alpha()
