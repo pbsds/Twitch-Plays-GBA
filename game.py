@@ -1,6 +1,8 @@
 import win32api, win32con, win32com.client
 from twisted.internet import reactor
 
+#Maybe save game to savestate every once in a while?
+
 class Game:
 	def __init__(self, Main):
 		self.Main = Main

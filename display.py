@@ -44,8 +44,8 @@ class Text():
 		
 		return out
 
-def MakeTime()
-	t = time.gmtime() - Settings.epoch
+def MakeTime():
+	t = time.time() - Settings.epoch
 	
 	d = t / (60*60*24)
 	t = t % (60*60*24)
@@ -114,17 +114,16 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 		Output.blit(pIndicator, (297 + Settings.Politics * 73 / Settings.pScale, 41))
 		
 		#update window:
-		pygame.transform.scale(Output, (1280, 720), Window)
+		pygame.transform.scale(Output, Settings.size, Window)
 		pygame.display.flip()
 
 def Setup(main, settings):
-	global Main, Settings, Commands, Text
+	global Main, Settings, Commands, Text, Window
 	Main = main
 	Settings = settings
 	Text = Text()
 	
-	Window = pygame.display.set_mode((1280,720))
-	
+	Window = pygame.display.set_mode(Settings.size)
 	
 	reactor.callLater(1.0/30.0, MainLoop)
 	

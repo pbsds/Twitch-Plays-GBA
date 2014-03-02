@@ -1,50 +1,52 @@
 from twisted.internet import reactor
 from ConfigParser import ConfigParser
+import time
 import twitch, game, display
 
 class Settings:
 	def __init__(self):
 		print "Reading data.ini..."
 		f = open("data.ini")
-		ini = ConfigParser()
-		ini.readfp(f)
+		self.ini = ConfigParser()
+		self.ini.readfp(f)
 		f.close()
 		
 		#Twitch:
-		self.username = ini.get("twitch", "username")
-		self.Oauth = ini.get("twitch", "oauth")#can be generated at http://twitchapps.com/tmi/
-		self.channel = ini.get("twitch", "channel")
+		self.username = self.ini.get("twitch", "username")
+		self.Oauth = self.ini.get("twitch", "oauth")#can be generated at http://twitchapps.com/tmi/
+		self.channel = self.ini.get("twitch", "channel")
 		
-		self.host = "irc.twitch.tv" if not ini.has_option("twitch", "host") else ini.get("twitch", "host")
-		self.port = 6667 if not ini.has_option("twitch", "port") else ini.getint("twitch", "port")
+		self.host = "irc.twitch.tv" if not self.ini.has_option("twitch", "host") else self.ini.get("twitch", "host")
+		self.port = 6667 if not self.ini.has_option("twitch", "port") else self.ini.getint("twitch", "port")
 		
 		#Politics:
-		self.Mode = 1 * (ini.get("politics", "mode") == "democracy")
-		self.Politics = ini.getint("politics", "votes")
-		self.pScale = ini.getint("politics", "vote_scale")
-		self.VotingTime = ini.getfloat("politics", "democracy_votingtime")
+		self.Mode = 1 * (self.ini.get("politics", "mode") == "democracy")
+		self.Politics = self.ini.getint("politics", "votes")
+		self.pScale = self.ini.getint("politics", "vote_scale")
+		self.VotingTime = self.ini.getfloat("politics", "democracy_votingtime")
 		
 		#Style:
-		self.scale = ini.getint("style", "render_scale")
-		self.cInputs = ini.get("style", "inputs_color")[-6:]
+		self.size = map(int, self.ini.get("style", "render_resolution").split("x"))
+		self.cInputs = self.ini.get("style", "inputs_color")[-6:]
 		self.cInputs = (int(self.cInputs[:2], 16), int(self.cInputs[2:4], 16), int(self.cInputs[4:6], 16))
-		self.font = ini.getint("style", "font")
-		#self.
+		self.font = self.ini.get("style", "font")
 		
-		self.epoch = time.gmtime() - ini.getint("time", "time")
+		#time:
+		self.epoch = time.time() - self.ini.getint("time", "time")
 		
 		reactor.callLater(60*5, self.Save)
 	def Save(self):
 		reactor.callLater(60*5, self.Save)
 		
-		#store to ini
-		ini.set("time", "time", str(time.gmtime() - self.epoch))
-		pass
+		#store to self.ini
+		self.ini.set("time", "time", str(int(time.time() - self.epoch)))
+		self.ini.set("politics", "mode", "democracy" if self.Mode else "anarchy")
+		self.ini.set("politics", "votes", str(self.Politics))
 		
 		#store to file
-		pass
-		
-		pass#save game to savestate?
+		f = open("data.ini", "w")
+		self.ini.write(f)
+		f.close()
 
 class Main:
 	def __init__(self):
@@ -56,7 +58,7 @@ class Main:
 		self.dBuffer = {}#democrachy
 		self.command = None
 		
-		reactor.callLater(1.0, self.Step)
+		reactor.callLater(0.5, self.Step)
 	def MSGRecieved(self, username, msg):
 		global Settings
 		msg = msg.lower()
@@ -71,22 +73,22 @@ class Main:
 		elif msg == "anarchy":
 			self.inputs.append((username, msg))
 			if Settings.Politics > 0: Settings.Politics -= 1
-			if Settings.Politics < 100 and Settings.Mode == 1:
+			if Settings.Politics < Settings.pScale/5 and Settings.Mode == 1:
 				print "Changed to Anarchy!"
 				Settings.Mode = 0
 		elif msg == "democracy":
 			self.inputs.append((username, msg))
-			if Settings.Politics < 499: Settings.Politics += 1
-			if Settings.Politics >= 400 and Settings.Mode == 0:
+			if Settings.Politics < Settings.pScale-1: Settings.Politics += 1
+			if Settings.Politics >= Settings.pScale*4/5 and Settings.Mode == 0:
 				print "Changed to Democracy!"
 				Settings.Mode = 1
 				self.command = None
 	def Step(self):#do stuff in democracy
 		global Settings
-		reactor.callLater(3.0, self.Step)
+		reactor.callLater(Settings.VotingTime, self.Step)
 	
 		#clean
-		self.inputs = self.inputs[-30:]
+		self.inputs = self.inputs[-20:]
 		
 		#democracy
 		if Settings.Mode:
@@ -103,7 +105,7 @@ Game = game.Game(Main)
 Main.Commands = Game.commands.keys()#now is later
 twitch.Connect(Settings.host, Settings.port, Settings.channel, Settings.username, Settings.Oauth, Main.MSGRecieved)
 
-display.Setup(Main)
+display.Setup(Main, Settings)
 
 reactor.run()
 
