@@ -9,7 +9,7 @@ An online copy can be found here: http://www.gnu.org/licenses/agpl-3.0.html
 
 How to use:
 - Sut up a python 2.7 enviroment and install pywin32, pygame and twisted
-- Download the latest Visual Boy Advance M and store it to vba/VisualBoyAdvance-M.exe
+- Download the latest Visual Boy Advance and store it to vba/VisualBoyAdvance.exe
 - Put the game you want to play in vba/game.gba.
 - Edit the visuals in graphics/ and display.py as you may please
 - Set the preferences you need in data.ini
