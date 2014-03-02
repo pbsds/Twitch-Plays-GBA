@@ -11,7 +11,6 @@ print "Initalizing pygame..."
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption("Twitch plays GBA")
-#Output = pygame.display.set_mode((427,240))
 Window = pygame.display.set_mode((427, 240))
 Output = pygame.Surface((427, 240)).convert()
 
@@ -45,7 +44,7 @@ class Text():
 		return out
 
 def MakeTime():
-	t = time.time() - Settings.epoch
+	t = int(time.time() - Settings.epoch)
 	
 	d = t / (60*60*24)
 	t = t % (60*60*24)
@@ -85,30 +84,31 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 		Output.blit(democracyBG if Settings.Mode else anarchyBG, (0, 0))
 		
 		#blit time:
-		timestamp
-		UTC
+		text = Text.CreateShadowed("%s   %s" % (timestamp, UTC), Settings.cTime1, Settings.cTime2)
+		w = text.get_width() - 1
+		Output.blit(text, (132-w/2, 38))
 		
 		#blit inputs:
 		for i, (user, cmd) in enumerate(Main.inputs[-15 + (7*Settings.Mode):][::-1]):
-			Output.blit(Text.Create(user), (262, 223 - 12*i))
+			Output.blit(Text.Create(user, Settings.cInputs), (262, 223 - 12*i))
 			Output.blit(Commands[cmd], (423-Commands[cmd].get_width(), 226 - 12*i))
-			
+		
 		#blit democracy stuff:
 		if Settings.Mode:
 			if Main.dBuffer:
 				for i, (cmd) in enumerate(sorted(Main.dBuffer.keys(), key=Main.dBuffer.get)[:6][::-1]):
-					#Output.blit(Text.Create(cmd), (262, 67 + 12*i))
+					#Output.blit(Text.Create(cmd, Settings.cInputs), (262, 67 + 12*i))
 					Output.blit(Commands[cmd], (264+8, 70 + 12*i))
 					
-					count = Text.Create(str(Main.dBuffer[cmd]))
+					count = Text.Create(str(Main.dBuffer[cmd]), Settings.cInputs)
 					Output.blit(count, (423-count.get_width() - 8, 67 + 12*i))
 			if Main.command:
-				w = (674 - Commands[Main.command].get_width()) / 2
+				x = (674 - Commands[Main.command].get_width()) / 2
 				
-				Output.blit(pCurrent, (w, 58))
+				Output.blit(pCurrent, (x, 58))
 				
-				#Output.blit(Text.Create(Main.command), (w+11, 55))
-				Output.blit(Commands[Main.command], (w+13, 58))
+				#Output.blit(Text.Create(Main.command, Settings.cInputs), (w+11, 55))
+				Output.blit(Commands[Main.command], (x+13, 58))
 			
 		#blit politics bar indicator:
 		Output.blit(pIndicator, (297 + Settings.Politics * 73 / Settings.pScale, 41))

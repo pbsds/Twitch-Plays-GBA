@@ -29,10 +29,17 @@ class Settings:
 		self.size = map(int, self.ini.get("style", "render_resolution").split("x"))
 		self.cInputs = self.ini.get("style", "inputs_color")[-6:]
 		self.cInputs = (int(self.cInputs[:2], 16), int(self.cInputs[2:4], 16), int(self.cInputs[4:6], 16))
+		self.cTime1 = self.ini.get("style", "time_color")[-6:]
+		self.cTime1 = (int(self.cTime1[:2], 16), int(self.cTime1[2:4], 16), int(self.cTime1[4:6], 16))
+		self.cTime2 = self.ini.get("style", "time_color_shadow")[-6:]
+		self.cTime2 = (int(self.cTime2[:2], 16), int(self.cTime2[2:4], 16), int(self.cTime2[4:6], 16))
 		self.font = self.ini.get("style", "font")
 		
 		#time:
 		self.epoch = time.time() - self.ini.getint("time", "time")
+		
+		#emulator
+		self.eTitle = self.ini.get("emulator", "title")
 		
 		reactor.callLater(60*5, self.Save)
 	def Save(self):
@@ -42,6 +49,9 @@ class Settings:
 		self.ini.set("time", "time", str(int(time.time() - self.epoch)))
 		self.ini.set("politics", "mode", "democracy" if self.Mode else "anarchy")
 		self.ini.set("politics", "votes", str(self.Politics))
+		
+		#make savestate:
+		Game.save()
 		
 		#store to file
 		f = open("data.ini", "w")
@@ -98,10 +108,10 @@ class Main:
 			if self.command:
 				Game.Command(self.command)
 
-Settings = Settings()				
+Settings = Settings()
 Main = Main()
 
-Game = game.Game(Main)
+Game = game.Game(Main, Settings.eTitle)
 Main.Commands = Game.commands.keys()#now is later
 twitch.Connect(Settings.host, Settings.port, Settings.channel, Settings.username, Settings.Oauth, Main.MSGRecieved)
 

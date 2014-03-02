@@ -1,0 +1,118 @@
+scenes : {
+  Scene : {
+    class : Scene
+    sources : {
+      Offline BG : {
+        render : 1
+        class : GlobalSource
+        data : {
+          name : Offline BG
+        }
+        cx : 1280
+        cy : 720
+        x : 0
+        y : 0
+      }
+    }
+  }
+  Streaming : {
+    class : Scene
+    sources : {
+      VisualBoyAdvance : {
+        render : 1
+        class : GlobalSource
+        data : {
+          name : VisualBoyAdvance
+        }
+        cx : 720
+        cy : 480
+        x : 36
+        y : 204
+        crop.left : 0
+        crop.top : 0
+        crop.right : 0
+        crop.bottom : 0
+      }
+      Twitch plays GBA : {
+        render : 1
+        class : GlobalSource
+        data : {
+          name : Twitch plays GBA
+        }
+        cx : 1280
+        cy : 720
+      }
+    }
+  }
+}
+global sources : {
+  Offline BG : {
+    class : BitmapImageSource
+    data : {
+      path : "C:\\Users\\pbsds\\Desktop\\TwitchPlays\\streaming\\offline.png"
+      opacity : 100
+      color : -1
+      useColorKey : 0
+      keyColor : -1
+      keySimilarity : 10
+      keyBlend : 0
+      monitor : 0
+    }
+    cx : 1280
+    cy : 720
+  }
+  Twitch plays GBA : {
+    class : WindowCaptureSource
+    data : {
+      captureType : 1
+      monitor : 0
+      window : Twitch plays GBA
+      windowClass : pygame
+      innerWindow : 1
+      regionCapture : 0
+      captureMouse : 0
+      captureLayered : 0
+      compatibilityMode : 0
+      usePointFiltering : 0
+      captureX : 0
+      captureY : 0
+      captureCX : 1280
+      captureCY : 720
+      useColorKey : 0
+      keyColor : -1
+      keySimilarity : 10
+      keyBlend : 0
+      opacity : 100
+      gamma : 100
+    }
+    cx : 1280
+    cy : 720
+  }
+  VisualBoyAdvance : {
+    class : WindowCaptureSource
+    data : {
+      captureType : 1
+      monitor : 0
+      window : " VisualBoyAdvance-M (SVN1206)"
+      windowClass : "Afx:00400000:0:00000000:01900011:060E0AC5"
+      innerWindow : 1
+      regionCapture : 0
+      captureMouse : 0
+      captureLayered : 0
+      compatibilityMode : 0
+      usePointFiltering : 0
+      captureX : 0
+      captureY : 0
+      captureCX : 720
+      captureCY : 480
+      useColorKey : 0
+      keyColor : -1
+      keySimilarity : 10
+      keyBlend : 0
+      opacity : 100
+      gamma : 100
+    }
+    cx : 720
+    cy : 480
+  }
+}
