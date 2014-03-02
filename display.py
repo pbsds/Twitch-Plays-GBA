@@ -44,7 +44,7 @@ class Text():
 		return out
 
 def MakeTime():
-	t = int(time.time() - Settings.epoch)
+	t = int(time.time() - Settings.epoch + 0.5)
 	
 	d = t / (60*60*24)
 	t = t % (60*60*24)

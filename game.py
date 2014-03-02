@@ -26,14 +26,18 @@ class Game:
 		self.wsh.AppActivate(self.eTitle)
 		reactor.callLater(5, self.activate)
 	def save(self):#called by Settings in main.py
+		#self.wsh.AppActivate(self.eTitle)
 		win32api.keybd_event(0x10, 0, 0, 0)#shift
 		win32api.keybd_event(0x70, 0, 0, 0)#F1
 		time.sleep(0.08)#or else it won't work on shutdown
+		#self.wsh.AppActivate(self.eTitle)
 		win32api.keybd_event(0x10, 0, win32con.KEYEVENTF_KEYUP, 0)#shift release
 		win32api.keybd_event(0x70, 0, win32con.KEYEVENTF_KEYUP, 0)#F1 release
 	def Command(self, cmd):
+		#self.wsh.AppActivate(self.eTitle)
 		win32api.keybd_event(self.commands[cmd], 0, 0, 0)
 		reactor.callLater(0.08, self._release, self.commands[cmd])
 	def _release(self, VK):
+		#self.wsh.AppActivate(self.eTitle)
 		win32api.keybd_event(VK, 0, win32con.KEYEVENTF_KEYUP, 0)
 		

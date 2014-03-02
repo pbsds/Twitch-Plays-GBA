@@ -14,7 +14,7 @@ How to use:
 - Edit the visuals in graphics/ and display.py as you may please
 - Set the preferences you need in data.ini
 - run run.bat
-- Set up your preffered streaming program, and make VBA overlay "Twitch Plays GBA" at x36, y=205, w=720, h=480
+- Set up your preffered streaming program, and make VBA overlay "Twitch Plays GBA" at x36, y=204, w=720, h=480
 - Stream
 
 Streaming:
