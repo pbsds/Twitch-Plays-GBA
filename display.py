@@ -1,10 +1,11 @@
 import pygame, sys, time
-from pygame.locals import *#do i need this?
+from pygame.locals import K_ESCAPE, KEYDOWN, QUIT
 from twisted.internet import reactor
 
 #set by Setup():
 Main = None#the class in main.py
 Settings = None#the class in main.py
+Game = None#the class in game.py
 
 #GameGlobals:
 print "Initalizing pygame..."
@@ -74,6 +75,9 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 	for i in Events:
 		if i.type == QUIT:
 			reactor.stop()
+		if i.type == KEYDOWN:
+			if i.key == K_ESCAPE:
+				Game.ToggleActivity()
 	
 	#figure wether to update the frame or not:
 	timestamp, UTC = MakeTime()
@@ -86,7 +90,7 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 		#blit time:
 		text = Text.CreateShadowed("%s   %s" % (timestamp, UTC), Settings.cTime1, Settings.cTime2)
 		w = text.get_width() - 1
-		Output.blit(text, (132-w/2, 38))
+		Output.blit(text, (132-w/2, 37))
 		
 		#blit inputs:
 		for i, (user, cmd) in enumerate(Main.inputs[-15 + (7*Settings.Mode):][::-1]):
@@ -117,10 +121,11 @@ def MainLoop():#like the mainloop, but an event triggered by twisted instead
 		pygame.transform.scale(Output, Settings.size, Window)
 		pygame.display.flip()
 
-def Setup(main, settings):
-	global Main, Settings, Commands, Text, Window
+def Setup(main, settings, game):
+	global Main, Settings, Game, Commands, Text, Window
 	Main = main
 	Settings = settings
+	Game = game
 	Text = Text()
 	
 	Window = pygame.display.set_mode(Settings.size)

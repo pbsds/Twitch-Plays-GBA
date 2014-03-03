@@ -115,7 +115,7 @@ Game = game.Game(Main, Settings.eTitle)
 Main.Commands = Game.commands.keys()#now is later
 twitch.Connect(Settings.host, Settings.port, Settings.channel, Settings.username, Settings.Oauth, Main.MSGRecieved)
 
-display.Setup(Main, Settings)
+display.Setup(Main, Settings, Game)
 
 reactor.run()
 

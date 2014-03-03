@@ -15,6 +15,7 @@ How to use:
 - Set the preferences you need in data.ini
 - run run.bat
 - Set up your preffered streaming program, and make VBA overlay "Twitch Plays GBA" at x36, y=204, w=720, h=480
+- You can toggle on or off the button output from "Twitch Plays GBA" by pressing ESCAPE
 - Stream
 
 Streaming:
