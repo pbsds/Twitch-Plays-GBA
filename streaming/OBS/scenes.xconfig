@@ -14,6 +14,9 @@ scenes : {
         y : 0
       }
     }
+    psvDesktopMFV : 1
+    psvMicMFV : 1
+    psvDesktopVolume : 1
   }
   Streaming : {
     class : Scene
@@ -43,6 +46,8 @@ scenes : {
         cy : 720
       }
     }
+    psvDesktopVolume : 1
+    psvDesktopMFV : 0
   }
 }
 global sources : {
@@ -93,8 +98,8 @@ global sources : {
     data : {
       captureType : 1
       monitor : 0
-      window : " VisualBoyAdvance-M (SVN1206)"
-      windowClass : "Afx:00400000:0:00000000:01900011:060E0AC5"
+      window : VisualBoyAdvance
+      windowClass : "Afx:400000:0:0:1900011:103075f"
       innerWindow : 1
       regionCapture : 0
       captureMouse : 0
