@@ -10,12 +10,11 @@ class TwitchListener(irc.IRCClient):
 		self.listening = False
 	def connectionMade(self):
 		irc.IRCClient.connectionMade(self)
-		print "TwitchListener connected to Twitch IRC server"
+		print "TwitchListener connected to Twitch IRC server!"
 	def connectionLost(self, reason):
 		irc.IRCClient.connectionLost(self, reason)
-		print "TwitchListener disconnected from Twitch IRC"
+		print "TwitchListener disconnected from Twitch IRC!"
 		self.listening = False
-		reactor.callLater(10,self.factory.Reconnect)
 	def JoinChannel(self):
 		if not self.listening:
 			reactor.callLater(5, self.JoinChannel)
@@ -55,13 +54,12 @@ class TwitchListenerFactory(protocol.ClientFactory):
 		p.factory = self
 		return p
 	def clientConnectionLost(self, connector, reason):
+		print "Reconnecting to Twitch IRC server..."
 		connector.connect()
 	def clientConnectionFailed(self, connector, reason):
 		print "connection failed:", reason
-		reactor.callLater(10,self.Reconnect)
-	def Reconnect(self):
 		print "Reconnecting to Twitch IRC server..."
-		reactor.connectTCP(self.host, self.port, self)
+		connector.connect()
 
 #sets up the connection to the twisted reactor:
 def Connect(host, port, channel, username, Oauth, SendTo):

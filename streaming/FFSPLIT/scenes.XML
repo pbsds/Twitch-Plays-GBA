@@ -8,7 +8,7 @@
   </Canvas>
   <Canvas CanvasName="Canvas 1">
     <LayerList>
-      <LayerScreen LayerName="Screen Window Layer:  VisualBoyAdvance-M (SVN1206)" Visible="true" Locked="false" Alpha="1" LayerX="0.028125" LayerY="0.283333331" LayerW="0.5625" LayerH="0.6666667" LayerAspectRatio="1.5" CaptureType="3" RegionLeft="0" RegionTop="0" RegionRight="0" RegionBottom="0" WindowName=" VisualBoyAdvance-M (SVN1206)" WindowProcessName="VisualBoyAdvance-M" WindowClientArea="true" WindowAsRegion="false" CaptureCursor="false" CaptureLayered="false" />
+      <LayerScreen LayerName="Screen Window Layer:  VisualBoyAdvance-M (SVN1206)" Visible="true" Locked="false" Alpha="1" LayerX="0.028125" LayerY="0.283333331" LayerW="0.5625" LayerH="0.6666667" LayerAspectRatio="1.5" CaptureType="3" RegionLeft="0" RegionTop="0" RegionRight="0" RegionBottom="0" WindowName="VisualBoyAdvance" WindowProcessName="VisualBoyAdvance" WindowClientArea="true" WindowAsRegion="false" CaptureCursor="false" CaptureLayered="false" />
       <LayerScreen LayerName="Screen Window Layer: Twitch plays GBA" Visible="true" Locked="false" Alpha="1" LayerX="0" LayerY="0" LayerW="1" LayerH="0.5625" LayerAspectRatio="1.77777779" CaptureType="3" RegionLeft="0" RegionTop="0" RegionRight="0" RegionBottom="0" WindowName="Twitch plays GBA" WindowProcessName="python" WindowClientArea="true" WindowAsRegion="false" CaptureCursor="false" CaptureLayered="false" />
     </LayerList>
     <Hotkey ID="0" />
